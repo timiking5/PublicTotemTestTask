@@ -22,10 +22,74 @@ public class ApplicationDbContext : DbContext
             new ExpenditureRecord
             {
                 Id = 1,
-                Amount = 1000,
+                Amount = 4000,
                 CategoryId = 1,
                 Date = new DateTime(2024, 03, 31),
                 Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 2,
+                Amount = 3000,
+                CategoryId = 1,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 3,
+                Amount = 2000,
+                CategoryId = 1,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 4,
+                Amount = 1000,
+                CategoryId = 2,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 5,
+                Amount = 1500,
+                CategoryId = 3,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 6,
+                Amount = 1200,
+                CategoryId = 4,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 7,
+                Amount = 6000,
+                CategoryId = 5,
+                Date = new DateTime(2024, 03, 31),
+                Description = "Some spends"
+            },
+            new ExpenditureRecord
+            {
+                Id = 8,
+                Amount = 10000,
+                CategoryId = 1,
+                Date = new DateTime(2024, 02, 29),
+                Description = "Extra hungry"
+            },
+            new ExpenditureRecord
+            {
+                Id = 9,
+                Amount = 8000,
+                CategoryId = 5,
+                Date = new DateTime(2024, 02, 29),
+                Description = "Extra hungry"
             }
             );
     }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.ViewModels;
+using System.Collections.Generic;
 
 namespace PublicTotemTestTask.Controllers;
 public class ExpenditureController : Controller
@@ -108,20 +110,36 @@ public class ExpenditureController : Controller
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
-    public IActionResult Report()
+    public IActionResult Report(int year, int month)
     {
-        List<PieSeriesData> pieData =
-        [
-            new PieSeriesData { Name = "FireFox", Y = 45.0 },
-            new PieSeriesData { Name = "IE", Y = 26.8 },
-            new PieSeriesData { Name = "Chrome", Y = 12.8, Sliced = true, Selected = true },
-            new PieSeriesData { Name = "Safari", Y = 8.5 },
-            new PieSeriesData { Name = "Opera", Y = 6.2 },
-            new PieSeriesData { Name = "Others", Y = 0.7 },
-        ];
+        var query = _db.ExpenditureRecord.AsQueryable().Include("Category");
+        var allExpenditureRecords = query.Where(x => x.Date.Year == year && x.Date.Month == month).ToList();
+        var aggregatedRecords = allExpenditureRecords.GroupBy(x => x.Category.Name).Select(gcs => new ExpenditureRecord
+        {
+            Amount = gcs.Sum(x => x.Amount),
+            Category = new Category { Name = gcs.Key }
+        }).ToList();
 
+        var pieData = aggregatedRecords.Select(x => new PieSeriesData { Name = x.Category.Name, Y = (double)x.Amount }).ToList();
         ViewData["pieData"] = pieData;
 
-        return View();
+        ReportVM vm = new()
+        {
+            AggregateByCategory = aggregatedRecords,
+            AllRecords = allExpenditureRecords,
+            Date = new DateTime(year, month, 1)
+        };
+        return View(vm);
+    }
+    public IActionResult OverView()
+    {
+        var list = _db.ExpenditureRecord.GroupBy(x => new { x.Date.Year, x.Date.Month })
+                .Select(gcs => new ExpenditureRecord
+                {
+                    Date = new DateTime(gcs.Key.Year, gcs.Key.Month, 1),  // standing for first day of month
+                    Amount = gcs.Sum(x => x.Amount)
+                })
+                .ToList();
+        return View(list);
     }
 }

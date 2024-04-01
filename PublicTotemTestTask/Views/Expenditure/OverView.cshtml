@@ -1,0 +1,22 @@
+﻿@model List<ExpenditureRecord>
+
+<div>
+    <h2>Your Reports</h2>
+    <table class="table table-striped">
+        <thead>
+            <th>Month</th>
+            <th>Total</th>
+            <th>Details</th>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.Date.ToString("MMMM yyyy")</td>
+                    <td>@record.Amount</td>
+                    <td><a asp-action="Report" asp-route-month="@record.Date.Month" asp-route-year="@record.Date.Year">Details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

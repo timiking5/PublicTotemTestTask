@@ -1,4 +1,6 @@
-﻿@using Highsoft.Web.Mvc.Charts
+﻿@model ReportVM
+
+@using Highsoft.Web.Mvc.Charts
 @using Highsoft.Web.Mvc.Charts.Rendering
 @using System.Collections;
 
@@ -17,7 +19,7 @@
           },
           Title = new Title
           {
-              Text = "Browser market shares at a specific website, 2014"
+              Text = $"Your expenditures in {Model.Date.ToString("MMMM yyyy")}"
           },
           Tooltip = new Tooltip
           {
@@ -59,7 +61,7 @@
               {
                 new PieSeries
                 {
-                    Name = "Browser Share",
+                    Name = "Expenditure Share",
                     Data = data
                 },
 
@@ -69,5 +71,46 @@
     chartOptions.ID = "chart";
     var renderer = new HighchartsRenderer(chartOptions);
 }
-
-@Html.Raw(renderer.RenderHtml())
+<div>
+    @Html.Raw(renderer.RenderHtml())
+    <h2>Groupped By Category</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.AggregateByCategory)
+            {
+                <tr>
+                    <td>@record.Category.Name</td>
+                    <td>@record.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h2>All Expenditures</h2>
+    <table class="table table-bordered table-striped" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.AllRecords)
+            {
+                <tr>
+                    <td>@record.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@record.Category.Name</td>
+                    <td>@record.Amount</td>
+                    <td>@(record.Description.Length > 20 ? record.Description.Substring(0, 20) : record.Description)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
